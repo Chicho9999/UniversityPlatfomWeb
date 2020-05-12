@@ -1,4 +1,3 @@
-
 import { authHeader } from '../_helpers';
 
 export const userService = {
@@ -7,23 +6,22 @@ export const userService = {
     register,
     getAll,
     getById,
-    update,
-    delete: _delete
+    update
 };
+
 const config = {
-    apiUrl: "http://localhost:3000"
+    apiUrl: "https://localhost:44352/api"
 }
+
 async function login(username, password) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ user: username, password })
     };
 
     const response = await fetch(`${config.apiUrl}/auth/login`, requestOptions);
     const user = await handleResponse(response);
-    // store user details and jwt token in local storage to keep user logged in between page refreshes
-    localStorage.setItem('user', JSON.stringify(user));
     return user;
 }
 
@@ -75,17 +73,18 @@ async function update(user) {
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-async function _delete(id) {
-    const requestOptions = {
-        method: 'DELETE',
-        headers: authHeader()
-    };
+// async function _delete(id) {
+//     const requestOptions = {
+//         method: 'DELETE',
+//         headers: authHeader()
+//     };
 
-    const response = await fetch(`${config.apiUrl}/users/${id}`, requestOptions);
-    return handleResponse(response);
-}
+//     const response = await fetch(`${config.apiUrl}/users/${id}`, requestOptions);
+//     return handleResponse(response);
+// }
 
 function handleResponse(response) {
+    
     return response.text().then(text => {
         const data = text && JSON.parse(text);
         if (!response.ok) {
